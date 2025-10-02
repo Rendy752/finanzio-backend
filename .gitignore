@@ -1,0 +1,53 @@
+Finanziio FastAPI Backend .gitignore
+-----------------------------------------------------------------
+1. Byte-compiled / optimized / backup files
+-----------------------------------------------------------------
+pycache/
+*.py[cod]
+*$py.class
+*.bak
+*.swp
+*.swo
+
+-----------------------------------------------------------------
+2. Environments and Dependencies
+-----------------------------------------------------------------
+Virtual environments
+venv/
+.venv/
+env/
+.env/
+
+Dependency installers
+pip-log.txt
+pip-delete-this-file.txt
+pip_packages.txt
+htmlcov/
+.tox/
+.coverage
+
+-----------------------------------------------------------------
+3. Sensitive Configuration and Secrets (CRITICAL for FinTech/RegTech)
+-----------------------------------------------------------------
+Credentials and Configuration
+.env            # Contains DATABASE_URL, SECRET_KEY, passwords
+.flaskenv
+*.key           # Private keys
+*.pem           # Certificate files (unless intentionally managed)
+*.crt
+*.pfx
+
+-----------------------------------------------------------------
+4. Database / SQLite (if used locally)
+-----------------------------------------------------------------
+*.sqlite3
+*.db
+db.sqlite3
+
+-----------------------------------------------------------------
+5. Testing and Linting Cache
+-----------------------------------------------------------------
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.history
