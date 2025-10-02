@@ -5,7 +5,7 @@ class Settings(BaseSettings):
     # --- Database Settings ---
     DB_USER: str = "shiruraizo"
     DB_PASS: str = "palembang01"
-    DB_HOST: str = "localhost"
+    DB_HOST: str = "172.31.4.134"
     DB_PORT: str = "5432"
     DB_NAME: str = "finanzio_db"
     
