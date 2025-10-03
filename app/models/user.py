@@ -1,6 +1,6 @@
 # app/models/user.py
 from sqlalchemy import Column, UUID, String, Boolean, DateTime
-from sqlalchemy.orm import relationship # <-- NEW IMPORT
+from sqlalchemy.orm import relationship 
 from sqlalchemy.sql import func
 from app.core.base import Base
 import uuid
