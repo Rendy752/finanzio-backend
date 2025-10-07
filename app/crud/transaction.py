@@ -2,6 +2,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from sqlalchemy import delete, update, func, or_
 from typing import List, Optional, Tuple
+from decimal import Decimal
 from uuid import UUID
 
 from app.models.transaction import Transaction
@@ -11,30 +12,33 @@ from app.schemas.transaction import TransactionCreate
 
 # --- Helper Function for Balance Update ---
 
-async def _update_wallet_balance(db: AsyncSession, wallet_id: UUID, amount: float, type: TransactionType, is_reversal: bool = False):
+async def _update_wallet_balance(db: AsyncSession, wallet_id: UUID, amount: Decimal, type: TransactionType, is_reversal: bool = False):
     """Adjusts the Wallet balance based on transaction amount and type."""
     
     # 1. Determine the adjustment sign
-    adjustment = float(amount) # Ensure Decimal is converted for math operations if necessary
-    if type == TransactionType.EXPENSE:
-        adjustment = -adjustment
-        
+    adjustment = amount # Now 'amount' is already Decimal
+    
     if is_reversal:
-        adjustment = -adjustment # Reverse the sign for deletion/update
-        
-    # 2. Construct the update statement
+        if type == TransactionType.INCOME:
+            adjustment = -adjustment
+        elif type == TransactionType.EXPENSE:
+            adjustment = +adjustment
+    
+    else:
+        if type == TransactionType.EXPENSE:
+            adjustment = -adjustment # New expense is a deduction
+
+    # 2. Construct the update statement (rest is correct)
     stmt = (
         update(Wallet)
         .where(Wallet.wallet_id == wallet_id)
         .values(
-            # Using expression for atomic update
             current_balance=Wallet.current_balance + adjustment
         )
     )
     
     await db.execute(stmt)
-    # Note: Rely on the calling function (CRUD) to perform db.commit()
-
+    
 # --- Read Operations ---
 
 async def get_transaction_by_id(db: AsyncSession, transaction_id: UUID, user_id: UUID) -> Optional[Transaction]:
