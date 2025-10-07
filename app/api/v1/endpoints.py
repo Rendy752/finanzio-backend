@@ -4,7 +4,11 @@ from app.core.db import get_db
 from app.schemas.user import UserCreate, UserResponse
 from app.schemas.common import APIResponse
 from app.crud.user import create_user 
-from app.api.v1 import wallet
+from app.api.v1 import wallet 
+from app.api.v1 import category
+from app.api.v1 import transaction
+from app.api.v1 import debt
+from app.api.v1 import budget
 
 router = APIRouter()
 
@@ -31,3 +35,7 @@ async def register_user(
     )
 
 router.include_router(wallet.router)
+router.include_router(category.router)
+router.include_router(transaction.router)
+router.include_router(debt.router)
+router.include_router(budget.router)

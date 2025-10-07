@@ -1,5 +1,6 @@
-from fastapi import APIRouter, Depends, HTTPException, status, Response
+from fastapi import APIRouter, Depends, HTTPException, status, Query, Response
 from sqlalchemy.ext.asyncio import AsyncSession
+from typing import Optional
 import uuid
 
 from app.core.db import get_db
@@ -42,19 +43,26 @@ async def create_wallet(
 )
 async def read_wallets(
     current_user: CurrentUser,
-    db: AsyncSession = DB_SESSION
+    db: AsyncSession = DB_SESSION,
+    q: Optional[str] = Query(None, description="Search by wallet name or currency"), # Tambahkan Search
+    limit: int = Query(10, ge=1, le=100),
+    offset: int = Query(0, ge=0)
 ):
     """Retrieves a list of all wallets owned by the current user."""
-    db_wallets = await crud_wallet.get_all_wallets_for_user(
+
+    # Panggil CRUD dengan parameter baru
+    db_wallets, total_count = await crud_wallet.get_all_wallets_for_user(
         db, 
-        user_id=current_user.user_id
+        user_id=current_user.user_id,
+        q=q,
+        limit=limit,
+        offset=offset
     )
-    
-    # Using APIListResponse, aligned with the request structure.
+
     return APIListResponse(
         message="Wallets retrieved successfully.",
         data=[WalletResponse.model_validate(w) for w in db_wallets],
-        total_count=len(db_wallets)
+        total_count=total_count # Gunakan total_count dari CRUD
     )
     
 @router.get(
