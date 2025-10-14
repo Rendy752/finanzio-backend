@@ -3,15 +3,17 @@ from sqlalchemy.future import select
 from app.models.user import User
 from app.schemas.user import UserCreate
 import uuid
-# NOTE: You will need to install a library like 'passlib[bcrypt]' for secure hashing
 from passlib.context import CryptContext
 
-# Define the password hashing context
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+pwd_context = CryptContext(
+    schemes=["pbkdf2_sha256"],
+    deprecated="auto",
+)
 
 def get_password_hash(password: str) -> str:
     """Securely hashes the provided password."""
-    return pwd_context.hash(password)
+    truncated_password = password.encode('utf-8')[:72]
+    return pwd_context.hash(truncated_password)
 
 
 async def get_user_by_email(db: AsyncSession, email: str) -> User | None:

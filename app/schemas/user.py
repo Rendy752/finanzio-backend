@@ -12,7 +12,7 @@ class UserBase(BaseModel):
 
 # 2. Input/Creation Schema (For POST requests)
 class UserCreate(UserBase):
-    password: str = Field(..., min_length=8) # Enforce minimum password length
+    password: str = Field(..., min_length=8, max_length=72)
     
 # 3. Response Schema (For data returned by API)
 class UserResponse(UserBase):

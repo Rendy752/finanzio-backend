@@ -15,18 +15,12 @@ from app.schemas.transaction import TransactionCreate
 async def _update_wallet_balance(db: AsyncSession, wallet_id: UUID, amount: Decimal, type: TransactionType, is_reversal: bool = False):
     """Adjusts the Wallet balance based on transaction amount and type."""
     
-    # 1. Determine the adjustment sign
-    adjustment = amount # Now 'amount' is already Decimal
+    sign = 1 if type == TransactionType.INCOME else -1
     
     if is_reversal:
-        if type == TransactionType.INCOME:
-            adjustment = -adjustment
-        elif type == TransactionType.EXPENSE:
-            adjustment = +adjustment
+        sign = -sign
     
-    else:
-        if type == TransactionType.EXPENSE:
-            adjustment = -adjustment # New expense is a deduction
+    adjustment = sign * amount
 
     # 2. Construct the update statement (rest is correct)
     stmt = (
