@@ -12,6 +12,7 @@ from app.api.v1 import category
 from app.api.v1 import transaction
 from app.api.v1 import debt
 from app.api.v1 import budget
+from app.api.v1 import report
 
 router = APIRouter()
 
@@ -82,3 +83,4 @@ router.include_router(category.router)
 router.include_router(transaction.router)
 router.include_router(debt.router)
 router.include_router(budget.router)
+router.include_router(report.router)
