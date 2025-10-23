@@ -1,4 +1,7 @@
+import uuid
 from pydantic_settings import BaseSettings
+
+MOCK_USER_A_ID: uuid.UUID = uuid.UUID("00000000-0000-0000-0000-000000000001")
 
 # Define configuration settings, pulling values from environment variables
 class Settings(BaseSettings):
@@ -24,6 +27,10 @@ class Settings(BaseSettings):
     SECRET_KEY: str = "YOUR_SUPER_SECRET_KEY_HERE"
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
+    
+    # --- MOCK & TESTING Settings ---
+    MOCK_USER_A_EMAIL: str = "authenticated@finanzio.id"
+    MOCK_USER_A_PASSWORD_HASH: str = "mock_hash_for_live_mode" # Digunakan untuk seeding DB
     
     class Config:
         # Load environment variables from a .env file if available

@@ -15,6 +15,9 @@ def get_password_hash(password: str) -> str:
     truncated_password = password.encode('utf-8')[:72]
     return pwd_context.hash(truncated_password)
 
+def verify_password(plain_password: str, hashed_password: str) -> bool:
+    """Verifies a plain password against the stored hash."""
+    return pwd_context.verify(plain_password, hashed_password)
 
 async def get_user_by_email(db: AsyncSession, email: str) -> User | None:
     """Retrieves a user object by email address."""
@@ -31,7 +34,6 @@ async def create_user(db: AsyncSession, user_in: UserCreate) -> User | None:
     """
     # Check if user already exists
     if await get_user_by_email(db, email=user_in.email):
-        # Return None or raise an exception in a full implementation
         return None 
 
     # Hash the password for secure storage

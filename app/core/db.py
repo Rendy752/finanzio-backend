@@ -1,13 +1,12 @@
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.orm import sessionmaker
 from typing import AsyncGenerator
-from sqlalchemy.future import select # Need to import select
+from sqlalchemy.future import select 
 
 # Import dependencies for user seeding
-from app.core.config import settings
+from app.core.config import settings, MOCK_USER_A_ID
 from app.core.base import Base 
 from app.models.user import User # Import User model
-from app.api.v1.dependencies import TEST_USER_A_ID # Import the fixed ID
 
 # --- Database Setup ---
 engine = create_async_engine(settings.DATABASE_URL, future=True, echo=False)
@@ -36,7 +35,7 @@ async def init_db():
         
     # 2. Seed Mock User
     async with AsyncSessionLocal() as session:
-        mock_user_id = TEST_USER_A_ID
+        mock_user_id = MOCK_USER_A_ID # <-- MOCK_USER_A_ID dari config
         
         # Check if user already exists
         user_exists = await session.execute(
@@ -45,12 +44,10 @@ async def init_db():
         if not user_exists.scalar_one_or_none():
             print(f"Seeding mock user: {mock_user_id}")
             
-            # NOTE: We only need the user ID, email, and a hashed password (mocked)
-            # This logic mimics the setup in app/tests/conftest.py
             mock_user = User(
                 user_id=mock_user_id,
-                email="authenticated@finanzio.id", # Using the email from the mock dependency
-                password_hash="mock_hash_for_live_mode", # Using a mock hash
+                email=settings.MOCK_USER_A_EMAIL, # <-- EMAIL dari config
+                password_hash=settings.MOCK_USER_A_PASSWORD_HASH, # <-- HASH dari config
                 is_active=True
             )
             session.add(mock_user)
