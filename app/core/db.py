@@ -35,25 +35,37 @@ async def init_db():
         
     # 2. Seed Mock User
     async with AsyncSessionLocal() as session:
-        mock_user_id = MOCK_USER_A_ID # <-- MOCK_USER_A_ID dari config
+        mock_user_id = MOCK_USER_A_ID
         
         # Check if user already exists
-        user_exists = await session.execute(
-            select(User.user_id).where(User.user_id == mock_user_id)
+        user_result = await session.execute(
+            select(User).where(User.user_id == mock_user_id) # <--- Select the User object
         )
-        if not user_exists.scalar_one_or_none():
+        existing_user = user_result.scalars().first()
+        
+        if not existing_user:
             print(f"Seeding mock user: {mock_user_id}")
             
             mock_user = User(
                 user_id=mock_user_id,
-                email=settings.MOCK_USER_A_EMAIL, # <-- EMAIL dari config
-                password_hash=settings.MOCK_USER_A_PASSWORD_HASH, # <-- HASH dari config
+                email=settings.MOCK_USER_A_EMAIL,
+                password_hash=settings.MOCK_USER_A_PASSWORD_HASH,
                 is_active=True
             )
             session.add(mock_user)
             await session.commit()
             print("Mock user seeded successfully.")
+        
+        # 💥 NEW LOGIC: Always ensure the existing user has the latest configured hash
         else:
-            print("Mock user already exists. Skipping seed.")
+            if existing_user.password_hash != settings.MOCK_USER_A_PASSWORD_HASH:
+                 print("Updating mock user's password hash in DB.")
+                 existing_user.password_hash = settings.MOCK_USER_A_PASSWORD_HASH
+                 existing_user.email = settings.MOCK_USER_A_EMAIL
+                 session.add(existing_user)
+                 await session.commit()
+                 print("Mock user password updated.")
+            else:
+                print("Mock user already exists. Skipping seed.")
 
         print("Database initialization complete.")

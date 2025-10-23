@@ -30,7 +30,7 @@ class Settings(BaseSettings):
     
     # --- MOCK & TESTING Settings ---
     MOCK_USER_A_EMAIL: str = "authenticated@finanzio.id"
-    MOCK_USER_A_PASSWORD_HASH: str = "mock_hash_for_live_mode" # Digunakan untuk seeding DB
+    MOCK_USER_A_PASSWORD_HASH: str = "$pbkdf2-sha256$29000$.J/z3vt/DyEkJGSM0TqnFA$bWq14wjtYkk9lBqxpUoIwHj.Gatpn4bC935wPTm3O7k" # Digunakan untuk seeding DB
     
     class Config:
         # Load environment variables from a .env file if available
