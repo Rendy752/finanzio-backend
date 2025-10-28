@@ -1,5 +1,6 @@
 import uuid
 from pydantic_settings import BaseSettings
+from app.crud.user import get_password_hash
 
 MOCK_USER_A_ID: uuid.UUID = uuid.UUID("00000000-0000-0000-0000-000000000001")
 
@@ -19,7 +20,7 @@ class Settings(BaseSettings):
     )
 
     # --- Redis Settings (for Caching/Sessions) ---
-    REDIS_HOST: str = "localhost"
+    REDIS_HOST: str = "127.0.0.1"
     REDIS_PORT: int = 6379
     REDIS_URL: str = f"redis://{REDIS_HOST}:{REDIS_PORT}/0"
 
@@ -30,7 +31,8 @@ class Settings(BaseSettings):
     
     # --- MOCK & TESTING Settings ---
     MOCK_USER_A_EMAIL: str = "authenticated@finanzio.id"
-    MOCK_USER_A_PASSWORD_HASH: str = "$pbkdf2-sha256$29000$.J/z3vt/DyEkJGSM0TqnFA$bWq14wjtYkk9lBqxpUoIwHj.Gatpn4bC935wPTm3O7k" # Digunakan untuk seeding DB
+    MOCK_USER_A_PASSWORD: str = "testpassword123"
+    MOCK_USER_A_PASSWORD_HASH: str = get_password_hash(MOCK_USER_A_PASSWORD)
     
     class Config:
         # Load environment variables from a .env file if available
