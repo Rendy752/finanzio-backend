@@ -1,0 +1,12 @@
+fastapi
+uvicorn[standard]  # Uvicorn is the ASGI server
+sqlalchemy
+asyncpg            # PostgreSQL async driver (as indicated by your code structure)
+redis[asyncio]     # For async Redis client
+python-jose[cryptography]
+passlib[bcrypt]
+pydantic
+pydantic-settings
+python-multipart
+psycopg2-binary    # Fallback/alternative PostgreSQL driver (often useful for local setup, but asyncpg is used in app)
+gunicorn           # Highly recommended for production deployment on Render
