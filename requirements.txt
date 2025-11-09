@@ -10,3 +10,4 @@ pydantic-settings
 python-multipart
 psycopg2-binary    # Fallback/alternative PostgreSQL driver (often useful for local setup, but asyncpg is used in app)
 gunicorn           # Highly recommended for production deployment on Render
+email-validator
